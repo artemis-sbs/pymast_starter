@@ -1,0 +1,3 @@
+Learning
+A starter mission for pymast
+58 #48f
