@@ -101,7 +101,7 @@ class Story(PyMastStory):
 
         def on_message(sim, event):
             if event.sub_tag.startswith(console_radio.tag):
-                self.task.console_selected = console_radio.value
+                self.task.console_select = console_radio.value
                 return True
 
         self.await_gui(on_message=on_message)
@@ -109,6 +109,6 @@ class Story(PyMastStory):
     @label()
     def console_selected(self):
         sbs.assign_client_to_ship(self.task.page.client_id,self.artemis)
-        self.gui_console(self.task.console_selected)
+        self.gui_console(self.task.console_select)
         self.await_gui()
         
