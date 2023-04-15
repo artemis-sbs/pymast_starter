@@ -20,15 +20,24 @@ class Story(PyMastStory):
         # This is a simple script that has one playable ship
         #
         sbs.create_new_sim()
-        #yield self.delay(1)
+    
 
-        self.artemis =  query.to_id(PlayerShip().spawn(self.sim, 0,0,0, "Artemis", "tsn", "tsn_battle_cruiser"))
+        # create a player ship
+        self.artemis =  query.to_id(PlayerShip().spawn(self.sim, 0,0,-500, "Artemis", "tsn", "tsn_battle_cruiser"))
+        # Client screen need to be assigned to a ship
+        # this assigns the main screen to artemis
         sbs.assign_client_to_ship(0,self.artemis)
 
-        print(f"start_server {self.start_text}")
+        # Queue an area to place gui content
         self.gui_section("area:2,20,80,35;")
+        # Queue a text gui content
         self.gui_text(f""" {self.start_text}""")
 
+        # Present the queued Gui Content
+        # as well as a set of buttons
+        #
+        # Buttons have text, and the can specify 
+        # a label to run when selected
         yield self.await_gui({
             "Start": self.start
         })
@@ -69,6 +78,7 @@ class Story(PyMastStory):
         k001 = Npc().spawn(self.sim, -1000,0,1000, "K001", "raider", "kralien_dreadnaught", "behav_npcship")
 
         sbs.resume_sim()
+        # jump to the end game label
         yield self.jump(self.end_game)
 
 
@@ -88,27 +98,47 @@ class Story(PyMastStory):
 
     @label()
     def select_console(self):
+
+        # Queue an area to play content
         self.gui_section("area:2,20,80,35;")
 
+        # Queue up some text
         self.gui_text("""Select your console""")
 
+        # Queue another area to place content
         self.gui_section("area: 85,50, 99,90;row-height:200px")
-        console_radio = self.gui_radio("helm,weapons, comms,science,engineering", self.task.console_select, True)
+        # Queue a set of radio button for the consoles
+        console_radio = self.gui_radio("helm,weapons,comms,science,engineering", self.task.console_select, True)
+        # Add a new row to the area
         self.gui_row("row-height: 30px;")
+        # Queue blank spot to separate the accept button
         self.gui_blank()
+        # Add another row for the accept button
+        # This time forcing the height of the row
         self.gui_row("row-height: 30px;")
+        # Queue up the accept button
+        # The button takes the text and a label to called
+        # when the button is pressed
         self.gui_button("accept", self.console_selected)
 
+        # This is a function to watch for changes when the gui is shown
+        # This one watches for changes in the radio buttons
         def on_message(sim, event):
             if event.sub_tag.startswith(console_radio.tag):
                 self.task.console_select = console_radio.value
                 return True
 
+        # Show the queued gui content (no buttons)
+        # And this is where you specify the on_message function so it is called
         self.await_gui(on_message=on_message)
         
     @label()
     def console_selected(self):
+        # This is called when the accept button is pressed
+        # Assign the gui client to Artemis
         sbs.assign_client_to_ship(self.task.page.client_id,self.artemis)
+        # Queue showing the widgets for the console selected 
         self.gui_console(self.task.console_select)
+        # Present the queued gui content
         self.await_gui()
         
