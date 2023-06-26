@@ -130,7 +130,7 @@ class Story(PyMastStory):
 
         # Show the queued gui content (no buttons)
         # And this is where you specify the on_message function so it is called
-        self.await_gui(on_message=on_message)
+        yield self.await_gui(on_message=on_message)
         
     @label()
     def console_selected(self):
