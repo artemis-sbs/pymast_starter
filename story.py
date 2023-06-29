@@ -75,7 +75,7 @@ class Story(PyMastStory):
         ds1 = Npc().spawn(self.sim, 1000,0,1000, "DS1", "tsn", "starbase_command", "behav_station")
 
         # Create an enemy
-        k001 = Npc().spawn(self.sim, -1000,0,1000, "K001", "raider", "kralien_dreadnaught", "behav_npcship")
+        k001 = Npc().spawn(self.sim, -1000,0,1000, "K001", "raider", "kralien_battleship", "behav_npcship")
 
         sbs.resume_sim()
         # jump to the end game label
